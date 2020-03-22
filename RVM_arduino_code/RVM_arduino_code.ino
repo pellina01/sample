@@ -3,7 +3,7 @@ int data, startByte, numMessage, id, endByte; //return message and message id
 String message, container;
 SoftwareSerial mySerial(10, 11);
 
-// ####### Commented Serial is just for debugging purpose. Comment it out if in use purpose.
+// ####### Commented Serial is just for debugging purpose. Comment it out if in use.
 
 String idbuffer, mode, obj_name, str_write;
 int record;
