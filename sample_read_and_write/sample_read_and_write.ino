@@ -3,29 +3,29 @@ int data, startByte, numMessage, id, endByte; //return message and message id
 String message, container;
 SoftwareSerial mySerial(10, 11);
 
-
+// ####### Commented Serial is just for debugging purpose. Comment it out if in use purpose.
 
 String idbuffer, mode, obj_name, str_write;
 int record;
 float pricebuffer, moded_value, return_value;
 
 void mode_computation(){
-  Serial.println("at object_computation");
+//  Serial.println("at object_computation");
   if(mode == "p"){
     return_value = moded_value/pricebuffer;
-    Serial.println(return_value);
+//    Serial.println(return_value);
     obj_name="eqweight";
     str_write=String(return_value);
     write_message();
-    Serial.println("tatlo here");
+//    Serial.println("tatlo here");
     }
   if(mode == "w"){
     return_value = moded_value*pricebuffer;
-    Serial.println(return_value);
+//    Serial.println(return_value);
     obj_name="eqprice";
     str_write=String(return_value);
     write_message();
-    Serial.println("dalwa here");
+//    Serial.println("dalwa here");
     }
   }
 
@@ -33,8 +33,8 @@ void mode_computation(){
 
 void catch_values(){
   if(record == 1){
-    Serial.println("at catch_value");
-    Serial.println(id);
+//    Serial.println("at catch_value");
+//    Serial.println(id);
     if(id == 12)//0c
     {
       mode = message;
@@ -75,32 +75,36 @@ void read_message(){
   if (mySerial.available()){ 
       data = mySerial.read();
       
-      if (data < 255 && startByte==1){ 
+      if (data < 255 && startByte==2){ 
         container.concat(char(data)); 
       }
       
-     if (data==255 && startByte==1){ 
+     if (data==255 && startByte==2){ 
        endByte = endByte + 1; 
      }
     
-     if (data==255 && endByte==3 && startByte==1){
+     if (data==255 && endByte==3 && startByte==2){
        message = container; 
        container = ""; 
-       numMessage  = numMessage + 1; 
+       numMessage  = 1; 
        endByte = 0;
      }
+     if(data < 255 && startByte == 1){
+      id = data;
+      startByte = 2;
+      data = 0;
+      }
      
-      if(data < 255 && startByte == 0){        
-        id = char(data);
+      if(data == 70 && startByte == 0){        
         data = 0;
         startByte = 1;
         }
 
   }
 
-  if(numMessage==1 && startByte==1){
-    Serial.println("isa here");
-    Serial.println(message);
+  if(numMessage==1 && startByte==2){
+//    Serial.println("isa here");
+//    Serial.println(message);
     numMessage = 0;
     startByte=0;
     record=1;
@@ -118,7 +122,7 @@ void write_message(){
   mySerial.write(0xff);
   mySerial.write(0xff);
   mySerial.write(0xff);
-  Serial.println("ok");   
+//  Serial.println("ok");   
 }
 
 
@@ -126,11 +130,11 @@ void setup() {
   data=0; startByte=0; endByte=0; numMessage=0; id = 0;
   record=0;
   container = "";
-  Serial.begin(115200);
+//  Serial.begin(115200);
   mySerial.begin(115200);
   while(!mySerial){;}
-  Serial.println("Serial On"); 
-  delay(500);
+//  Serial.println("Serial On"); 
+  delay(100);
 
 }
 
