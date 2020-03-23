@@ -3,28 +3,32 @@ int data, startByte, numMessage, id, endByte; //return message and message id
 String message, container;
 SoftwareSerial mySerial(10, 11);
 
-// ####### Commented Serial is just for debugging purpose. Comment it out if in use.
+// ####### Commented Serial is just for debugging purpose. Comment it out if in use purpose.
 
-String idbuffer, mode, obj_name, str_write;
+String idbuffer, mode; 
+
 int record;
 float pricebuffer, moded_value, return_value;
 
+
+
 void mode_computation(){
+  String obj_name_buffer, write_buffer;
 //  Serial.println("at object_computation");
   if(mode == "p"){
     return_value = moded_value/pricebuffer;
 //    Serial.println(return_value);
-    obj_name="eqweight";
-    str_write=String(return_value);
-    write_message();
+    obj_name_buffer="eqweight";
+    write_buffer=String(return_value,5);
+    write_message(&obj_name_buffer, &write_buffer);
 //    Serial.println("tatlo here");
     }
   if(mode == "w"){
     return_value = moded_value*pricebuffer;
 //    Serial.println(return_value);
-    obj_name="eqprice";
-    str_write=String(return_value);
-    write_message();
+    obj_name_buffer="eqprice";
+    write_buffer=String(return_value);
+    write_message(&obj_name_buffer, &write_buffer);
 //    Serial.println("dalwa here");
     }
   }
@@ -59,15 +63,6 @@ void catch_values(){
   
   }
 }
-
-
-
-
-
-
-
-
-
 
 
 void read_message(){
@@ -114,10 +109,10 @@ void read_message(){
 
 
 
-void write_message(){
-  mySerial.print(obj_name);
+void write_message(String *obj_name, String *str_write){
+  mySerial.print(*obj_name);
   mySerial.print(F(".txt=\""));
-  mySerial.print(str_write);
+  mySerial.print(*str_write);
   mySerial.print(F("\""));
   mySerial.write(0xff);
   mySerial.write(0xff);
